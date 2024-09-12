@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log Service</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        #logEntries {
+            margin-top: 20px;
+        }
+        input[type="text"] {
+            padding: 10px;
+            font-size: 16px;
+            width: 300px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+        pre {
+            background-color: #f4f4f4;
+            padding: 10px;
+            border: 1px solid #ddd;
+            overflow: auto;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Send Message to Log Service</h1>
+
+<div>
+    <input type="text" id="message" placeholder="Enter your message">
+    <button onclick="submitMessage()">Submit</button>
+</div>
+
+<div id="logEntries">
+    <h2>Last 10 Log Entries:</h2>
+    <pre id="logResponse"></pre>
+</div>
+
+<script>
+    function submitMessage() {
+        const message = document.getElementById('message').value;
+
+        if (!message) {
+            alert("Please enter a message.");
+            return;
+        }
+
+        fetch('/submit', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(message),
+        })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('logResponse').textContent = JSON.stringify(data, null, 2);
+            })
+            .catch(error => console.error('Error:', error));
+    }
+</script>
+
+</body>
+</html>
